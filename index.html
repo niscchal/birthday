@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy Birthday 💖</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    color: white;
+
+    /* dark pink smooth background (no white flash) */
+    background: linear-gradient(135deg, #ff3d7f, #ff8fb3);
+    overflow: hidden;
+}
+
+/* floating background items */
+.bg-item {
+    position: fixed;
+    bottom: -50px;
+    font-size: 28px;
+    animation: floatUp linear infinite;
+    opacity: 0.7;
+    z-index: 0;
+    pointer-events: none;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-110vh);
+        opacity: 0;
+    }
+}
+
+/* content layer above background */
+.overlay {
+    min-height: 100vh;
+    padding: 20px;
+    position: relative;
+    z-index: 2;
+}
+
+/* countdown */
+#countdown {
+    font-size: 3em;
+    margin-top: 30px;
+}
+
+/* hidden */
+.hidden {
+    display: none;
+}
+
+/* button */
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+/* secret */
+#secret {
+    margin-top: 20px;
+    font-size: 1.3em;
+}
+
+/* candle */
+.candle {
+    width: 12px;
+    height: 50px;
+    background: white;
+    margin: 5px;
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+}
+
+.flame {
+    width: 10px;
+    height: 15px;
+    background: orange;
+    border-radius: 50%;
+    position: absolute;
+    top: -15px;
+}
+
+/* hearts */
+.heart {
+    position: fixed;
+    bottom: 0;
+    font-size: 20px;
+    animation: floatUp 5s linear;
+    z-index: 1;
+}
+
+/* popup */
+#popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.85);
+    color: white;
+    font-size: 2em;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 9999;
+}
+</style>
+</head>
+
+<body>
+
+<div class="overlay">
+
+<h1>🎂 Countdown to Birthday</h1>
+
+<div id="countdown"></div>
+
+<div id="content" class="hidden">
+
+    <h3>🎁 Secret Message</h3>
+    <input type="password" id="pass" placeholder="Enter password">
+    <br><br>
+    <button onclick="unlock()">Unlock</button>
+
+    <div id="secret" class="hidden">
+        💌 You are the most special person in my life ❤️  
+        I love you more than words can say 💖
+    </div>
+
+    <h3>🕯️ Make a Wish</h3>
+    <div>
+        <div class="candle" onclick="blow(this)"><div class="flame"></div></div>
+        <div class="candle" onclick="blow(this)"><div class="flame"></div></div>
+    </div>
+
+</div>
+</div>
+
+<!-- popup -->
+<div id="popup">
+    🎉 Happy Birthday bebb 🎉
+    <p>You are loved more than anything 💖</p>
+</div>
+
+<script>
+const target = new Date("2026-04-27T00:00:00").getTime();
+let done = false;
+
+/* countdown */
+function update() {
+    const now = new Date().getTime();
+    const gap = target - now;
+
+    if (gap <= 0 && !done) {
+        done = true;
+        document.getElementById("countdown").innerHTML = "🎉 TIME'S UP 🎉";
+
+        document.getElementById("content").classList.remove("hidden");
+
+        showBirthday();
+        return;
+    }
+
+    const d = Math.floor(gap / (1000*60*60*24));
+    const h = Math.floor((gap / (1000*60*60)) % 24);
+    const m = Math.floor((gap / (1000*60)) % 60);
+    const s = Math.floor((gap / 1000) % 60);
+
+    document.getElementById("countdown").innerHTML =
+        ${d}d ${h}h ${m}m ${s}s;
+}
+
+setInterval(update, 1000);
+update();
+
+/* popup + hearts */
+function showBirthday() {
+    document.getElementById("popup").style.display = "flex";
+
+    setInterval(() => {
+        let heart = document.createElement("div");
+        heart.innerHTML = "💖";
+        heart.className = "heart";
+        heart.style.left = Math.random() * 100 + "vw";
+        document.body.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 5000);
+    }, 300);
+}
+
+/* secret */
+function unlock() {
+    if (document.getElementById("pass").value === "love") {
+        document.getElementById("secret").classList.remove("hidden");
+    } else {
+        alert("Wrong password 💔");
+    }
+}
+
+/* candle */
+function blow(c) {
+    c.innerHTML = "🕯️";
+}
+
+/* floating background bears + hearts */
+function createBackground() {
+    const items = ["💖", "🧸"];
+
+    setInterval(() => {
+        const el = document.createElement("div");
+        el.className = "bg-item";
+        el.innerHTML = items[Math.floor(Math.random() * items.length)];
+
+        el.style.left = Math.random() * 100 + "vw";
+        el.style.fontSize = (20 + Math.random() * 25) + "px";
+        el.style.animationDuration = (5 + Math.random() * 5) + "s";
+
+        document.body.appendChild(el);
+
+        setTimeout(() => el.remove(), 10000);
+    }, 300);
+}
+
+createBackground();
+</script>
+
+</body>
+</html>
